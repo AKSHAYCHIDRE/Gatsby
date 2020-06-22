@@ -234,9 +234,11 @@ class HospitalityDetails extends React.Component {
                   </nav>
                 </div>
               </div>
-              {/* ...................Customizable Button..................
+              {/* ...................Customizable Button.................. */}
               {
-                  hospitalityData.data.customizable_button[0].link1 && hospitalityData.data.customizable_button[0].link1.url ?
+                hospitalityData.data.customizable_button &&
+                 hospitalityData.data.customizable_button.length &&
+                  hospitalityData.data.customizable_button[0].link1 ?
                   <div className="container detail-page-sections d-flex justify-content-center download-btn">
                     {
                       hospitalityData.data.customizable_button  && hospitalityData.data.customizable_button.map((item, index) => {
@@ -247,7 +249,7 @@ class HospitalityDetails extends React.Component {
                       })
                     }
                   </div> : null
-                } */}
+                }
               <div className="padding-block-60">
                 <h2 className="page-heading text-uppercase">
                   {hospitalityData.data.heading.text}
@@ -745,7 +747,7 @@ class HospitalityDetails extends React.Component {
 
             {/* <!--   ------------------- Download Brouchure section start here ------------------- --> */}
            {
-            hospitalityData.data.download_info > 0 && hospitalityData.data.download_info ?
+            hospitalityData.data.download_info && hospitalityData.data.download_info > 0 && hospitalityData.data.download_info ?
               <div className="container detail-page-sections d-flex justify-content-center download-btn">
                 {
                    hospitalityData.data.download_info > 0 && hospitalityData.data.download_info.map((item, index) => {
