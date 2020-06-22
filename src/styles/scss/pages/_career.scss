@@ -493,6 +493,9 @@
     .slider-page.careers-slider-wrapper{
       .slick-list{
         padding: 0 !important;
+        .slick-center{
+          transform: initial;
+        }
       }
     }
   }
