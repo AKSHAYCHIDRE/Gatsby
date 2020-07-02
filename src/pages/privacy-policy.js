@@ -7,10 +7,10 @@ import Img from 'gatsby-image';
 
 class PrivacyPolicy extends React.Component {
   render(){
-    const privacyData = this.props.data.prismicPrivacyPolicy.data;
+    const privacyData = this.props.data.prismicPrivacyPolicy.data; 
     return(
       <Layout location="/" noHeader="true"  pathname={this.props.location.pathname}>
-        <SEO title={privacyData.title.text} />
+        <SEO title={privacyData.seo_title} description={privacyData.seo_description}/>
           <div className="page-heading-section container container-sm-fluid bg-color mb-4 mb-sm-5">
             <div className="padding-block-60">
               <h2 className="page-heading">{privacyData.title.text}</h2>
@@ -26,6 +26,28 @@ class PrivacyPolicy extends React.Component {
               </div>
             </div>
           </div>
+          {
+            privacyData.group &&   privacyData.group.map((item) => {
+              if(item.title1.text != 'null' && item.description1.html != 'null') {
+                  return(
+                      <section className="detail-page-sections pb-0 pt-sm-0 container container-sm-fluid " >
+                          <div className="padding-block-60 page-heading-section">
+                              <div className="col-12 padding-sm-0">
+                                  <h2 className="page-heading text-uppercase">
+                                      {item.title1.text}
+                                  </h2>
+                              </div>
+                          </div>
+                          <div className="row">
+                              <div className="col-12">
+                                  <div className="mb-5" dangerouslySetInnerHTML={{__html:item.description1.html }}/>
+                              </div>
+                          </div>
+                      </section>
+                  )
+              }
+              })
+          }
       </Layout>
     )
   } 
@@ -35,6 +57,8 @@ export default PrivacyPolicy;
 export const privacyPolicy = graphql` {
   prismicPrivacyPolicy {
     data {
+      seo_title,
+      seo_description,
       title {
         text
       }

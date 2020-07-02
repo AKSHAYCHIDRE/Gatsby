@@ -30,14 +30,24 @@ const Layout = ({ children, pathname, className }) => {
           tagline {
             html
           }
+          whatsapp {
+            url
+          }
+          contact_info {
+            number
+            title1 {
+              text
+            }
+          }
          followus {
           title1{
             text
           }
           link {
-            url
+            url 
           }
           }
+
         }
       }
     }
@@ -46,7 +56,7 @@ const Layout = ({ children, pathname, className }) => {
 
   return (
     <>
-      <Header siteTitle={data.site.siteMetadata.title} pathname={pathname} />
+      <Header siteTitle={data.site.siteMetadata.title} data={data.prismicCompanyDetails.data } pathname={pathname} />
       <main className={className}>{children}</main>
       {
         pathname=='/' ? null :

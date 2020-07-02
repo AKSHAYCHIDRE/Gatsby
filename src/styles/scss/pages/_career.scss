@@ -492,6 +492,7 @@
   .career-page{
     .slider-page.careers-slider-wrapper{
       .slick-list{
+<<<<<<< HEAD
         padding: 0 96px !important;
         .slick-slide.slick-active.slick-current{
           transform: scale(1.2);
@@ -505,6 +506,15 @@
     }
   }
 
+=======
+        padding: 0 !important;
+        .slick-center{
+          transform: none;
+        }
+      }
+    }
+  }
+>>>>>>> c6bf8d138af55ee51ab1ec34bd4e8e56ce5dcae9
 }
 @media (max-width: 470px) {
   .job-opening .career-tabs .btn-wraper {

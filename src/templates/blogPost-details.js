@@ -20,7 +20,7 @@ export default class BlogPost extends React.Component {
         console.log(blogData.group)
         return(
             <Layout location="/" noHeader="true"  pathname={this.props.location.pathname}>
-                <SEO title='Blog Post'/>
+                <SEO title={blogData.seo_title} description={blogData.seo_description}/>
                 <main className="detail-page" id="residential-details">
                     {/* <!--   ---------------- banner start here ---------------- --> */}
                     <Div100vh style={{ height: 'calc(100rvh - 60px)'}} className="banner-section" id="banner-section">
@@ -54,25 +54,26 @@ export default class BlogPost extends React.Component {
                     </section>
                     {
                      blogData.group &&   blogData.group.map((item) => {
-                            return(
-                                <section className="detail-page-sections pb-0 pt-sm-0 container container-sm-fluid " >
-                                    <div className="padding-block-60 page-heading-section">
-                                        <div className="col-12 padding-sm-0">
-                                            <h2 className="page-heading text-uppercase">
-                                                {item.title1.text}
-                                            </h2>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-12">
-                                            <div className="mb-5" dangerouslySetInnerHTML={{__html:item.description1.html }}/>
-                                        </div>
-                                    </div>
-                               </section>
-                            )
+                         if(item.title1.text != 'null' && item.description1.html != 'null') {
+                             return(
+                                 <section className="detail-page-sections pb-0 pt-sm-0 container container-sm-fluid " >
+                                     <div className="padding-block-60 page-heading-section">
+                                         <div className="col-12 padding-sm-0">
+                                             <h2 className="page-heading text-uppercase">
+                                                 {item.title1.text}
+                                             </h2>
+                                         </div>
+                                     </div>
+                                     <div className="row">
+                                         <div className="col-12">
+                                             <div className="mb-5" dangerouslySetInnerHTML={{__html:item.description1.html }}/>
+                                         </div>
+                                     </div>
+                                </section>
+                             )
+                         }
                         })
                     }
-               
                 </main>
             </Layout>
         )
@@ -83,6 +84,8 @@ export const blogPost = graphql`
     query blogQyery($uid: String!) {
     prismicBlog(uid: { eq: $uid })  {
       data {
+        seo_title,
+        seo_description,
         title {
           text
         }

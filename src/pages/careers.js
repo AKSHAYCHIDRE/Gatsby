@@ -14,6 +14,8 @@ import queryString from 'query-string';
 import '../firebase/config'
 import * as firebase from 'firebase';
 import FileUploader from "react-firebase-file-uploader";
+import $ from 'jquery'
+import 'firebase/storage';
 
 class Careers extends React.Component {
   constructor() {
@@ -32,46 +34,53 @@ class Careers extends React.Component {
       utmSource: null,
       utmMedium: null,
       utmCampaign: null,
-      jobOpenningButtons: [
-        {
-          id: 'sales',
-          name: 'Sales',
-        },
-        // {
-        //   id: 'human_resources',
-        //   name: 'Human Resources'
-        // },
-        // {
-        //   id: 'management',
-        //   name: 'Management'
-        // },
-        // {
-        //   id: 'engineers',
-        //   name: 'Engineers'
-        // },
-        // {
-        //   id: 'accounts',
-        //   name: 'Accounts'
-        // },
-        // {
-        //   id: 'project_manager',
-        //   name: 'Project Manager'
-        // },
-        {
-          id: 'admin',
-          name: 'Administration'
-        },
-        {
-          id: 'architect',
-          name: 'Architect'
-        }
-      ]
+      jobTitle:'',
+      jobOpenningButtons: [],
+      jobApplyFlag:false,
+      applySuccess:false
     }
   }
 
   UNSAFE_componentWillMount() {
+  
     let jobOpening = [];
     const careerData = this.props.data.prismicCareers.data;
+    let jobOpenningButtons = [
+      {
+        id: careerData.sale_key,
+        name: careerData.sale_button_name,
+      },
+      {
+        id: careerData.human_resources_key,
+        name: careerData.human_resources_button_name
+      },
+      {
+        id: careerData.management_key,
+        name: careerData.management_button_name
+      },
+      {
+        id: careerData.engineer_key,
+        name: careerData.engineer_button_name
+      },
+      {
+        id: careerData.account_key,
+        name: careerData.account_button_name
+      },
+      {
+        id: careerData.project_manager_key,
+        name: careerData.project_manager_button_name
+      },
+      {
+        id: careerData.admin_key,
+        name: careerData.admin_button_name
+      },
+      {
+        id: careerData.architect_key,
+        name: careerData.architect_button_name
+      }
+    ]
+console.log(jobOpenningButtons);
+
     careerData.architect.map((item) => {
       jobOpening.push(item)
     })
@@ -96,13 +105,15 @@ class Careers extends React.Component {
     careerData.sales.map((item) => {
       jobOpening.push(item)
     })
-    this.setState({ jobOpening, jobOpeningStore: jobOpening, dataSource: careerData })
+    this.setState({ jobOpening, jobOpeningStore: jobOpening, dataSource: careerData,jobOpenningButtons })
     const queryParams = queryString.parseUrl(this.props.location.search); 
     this.setState({
       utmSource: queryParams && queryParams.query.utm_source,
       utmMedium: queryParams && queryParams.query.utm_medium,
       utmCampaign: queryParams && queryParams.query.utm_campaign
     });
+
+   
   }
 
   handleJobOpening(event) {
@@ -163,6 +174,7 @@ class Careers extends React.Component {
       .ref("Careers")
       .push()
       .set({
+        jobTitle:this.state.jobTitle,
         name: e.target.name.value,
         email: e.target.email.value,
         applyFor: e.target.applyFor.value,
@@ -173,7 +185,18 @@ class Careers extends React.Component {
       })
       this.setState({avatar: ''});
       document.querySelector('.careerResetForm').reset();
+
+      $(function () {
+        $('#exampleModalCenter').modal('toggle');
+     });
+
+    this.setState({applySuccess:true})
+
+    setTimeout(() => {
+      this.setState({applySuccess:false})
+    }, 4000);
   }
+
 
   render() {
     const { photoIndex, isOpen } = this.state;
@@ -215,9 +238,10 @@ class Careers extends React.Component {
         }
       ]
     };
+    
     return (
       <Layout location="/" noHeader="true" pathname={this.props.location.pathname}>
-        <SEO title="Careers" />
+        <SEO title={careerData.seo_title} description={careerData.seo_description}/>
         <div className="career-page">
           <Div100vh style={{ height: 'calc(100rvh - 60px)' }} className="banner-section mt-60">
             <picture>
@@ -240,7 +264,11 @@ class Careers extends React.Component {
               </div>
             </div>
           </section>
+<<<<<<< HEAD
           <section className="slider-page careers-slider-wrapper mt-5 m-sm-0">
+=======
+          <section className=" slider-page careers-slider-wrapper mt-5 m-sm-0">
+>>>>>>> c6bf8d138af55ee51ab1ec34bd4e8e56ce5dcae9
             <div className="padding-block-60 d-flex justify-content-center flex-column w-100 ">
               <h3 className="section-title text-center text-uppercase mb-0" >
                 {careerData.life_at_bramha.text}
@@ -307,15 +335,19 @@ class Careers extends React.Component {
                   <i className="fas fa-search search-btn"></i>
                 </form>
                 <div className="career-tabs  d-flex flex-wrap justify-content-between align-content-between">
-                  {this.state.jobOpenningButtons.map((item) => {
-                    return (
-                      <div className="btn-wraper" key={item.id}>
-                        <button onClick={() => this.handleJobOpening(item)} className={`button-tertiary w-100  ${item.className}`}>
-                          {item.name}
-                        </button>
-                      </div>
-                    )
-                  })}
+                  {
+                  this.state.jobOpenningButtons.map((item) => {
+                    if(item.name != 'null') {
+                      return (
+                        <div className="btn-wraper" key={item.id}>
+                          <button onClick={() => this.handleJobOpening(item)} className={`button-tertiary w-100  ${item.className}`}>
+                            {item.name}
+                          </button>
+                        </div>
+                      )
+                    }
+                  })
+                  }
                 </div>
               </div>
             </div>
@@ -346,66 +378,10 @@ class Careers extends React.Component {
                                 {item.description2.text}
                               </p>
                             </div>
-                            <button className="btn-secondary " data-toggle="modal" data-target={`#exampleModal${value}`}>
+                            <button className="btn-secondary " data-toggle="modal" data-target="#exampleModalCenter" 
+                              onClick={() => this.setState({jobTitle:item.position.text,jobApplyFlag:true})}>
                               Apply For Job
                               </button>
-                            {/* ------------- Modal ----------------- */}
-                            <div className="modal fade" id={`exampleModal${value}`} tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                              <div className="modal-dialog" role="document">
-                                <div className="modal-content">
-                                  <div className="modal-header">
-                                    <h2 className="modal-title section-title text-center w-100" id="exampleModalLabel">Apply For Job</h2>
-                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                      <span aria-hidden="true">&times;</span>
-                                    </button>
-                                  </div>
-                                  <div className="modal-body">
-                                    <form className="careerResetForm" onSubmit={(e) => this.submitCareer(e)}>
-                                      <div className="container">
-                                      <div className="form-row">
-                                        <input type="hidden" name="form-name" value="career"/>
-                                        <input type="hidden" id="applyFor" name="form-name" value={item.position.text} />
-                                        <input type="hidden" id="utmSource" name="utmSource" value={this.state.utmSource} />
-                                        <input type="hidden" id="utmMedium" name="utmMedium" value={this.state.utmMedium} />
-                                        <input type="hidden" id="utmCampaign" name="utmCampaign" value={this.state.utmCampaign} />
-
-                                        <div className="col-sm-6 form-group">
-                                          <input type="text" className="form-control rounded-0" id="name" placeholder="Your Name*" name="name" autoComplete="false" required />
-                                        </div>
-                                        <div className="col-sm-6 form-group">
-                                          <input type="text" className="form-control rounded-0" id="email" placeholder="Your Email*" autoComplete="false" name="email" required />
-                                        </div>
-                                        {/* <div className="col-12"> */}
-                                          {/* <div className="form-group file-area">
-                                            <FileUploader
-                                              id="file"
-                                              className="w-100 resume-upload-input h-100"
-                                              accept="pdf/*"
-                                              name="resume-upload"
-                                              storageRef={firebase.storage().ref("Resume")}
-                                              onUploadSuccess={this.handleUploadResumeSuccess}
-                                            />
-                                          <div className="file-dummy resume-upload">
-                                            {
-                                              this.state.avatar && this.state.avatar ? this.state.avatar:
-                                              <div className="default">Resume Upload (PDF/DOC)*</div>
-                                            }
-                                          </div>
-                                        </div> */}
-
-                                        {/* </div> */}
-                                      </div>
-                                      <div className="sumbit text-center mt-sm-0 mt-4">
-                                        <button type="submit" className="btn-secondary">
-                                            Submit
-                                          </button>
-                                      </div>
-                                      </div>
-                                    </form>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -425,11 +401,13 @@ class Careers extends React.Component {
               <span className="d-block">Upload your CV to our portal.</span>
               <span className="d-block">We will get back to you once suitable position is open</span>
             </p>
+            <div onClick={() => this.setState({jobTitle:'any',jobApplyFlag:true})}>
             <input type="file" className="border-0 input-file-btn" id="choose-file" placeholder="Upload your CV" />
               <label className="btn-secondary"  data-toggle="modal" data-target="#exampleModalCenter" >Upload your CV</label>
+            </div>
           </section>
-       
-          <div className="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+          <div className="modal fade"  id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="false">
               <div className="modal-dialog modal-dialog-centered" role="document">
                 <div className="modal-content">
                   <div className="modal-header">
@@ -454,8 +432,8 @@ class Careers extends React.Component {
                       <div className="col-sm-6 form-group">
                         <input type="text" className="form-control rounded-0" id="email" placeholder="Your Email*" autoComplete="off" name="email" required />
                       </div>
-                      {/* <div className="col-12"> */}
-                        {/* <div className="form-group file-area">
+                      <div className="col-12">
+                        <div className="form-group file-area">
                           <FileUploader
                             id="file"
                             className="w-100 resume-upload-input h-100"
@@ -472,7 +450,7 @@ class Careers extends React.Component {
                         </div>
                       </div>
 
-                      </div> */}
+                      </div>
                     </div>
                     <div className="sumbit text-center mt-sm-0 mt-4">
                       <button type="submit" className="btn-secondary">
@@ -487,6 +465,13 @@ class Careers extends React.Component {
               </div>
             </div>
         </div>
+        {
+          this.state.applySuccess &&
+        <div class="alert alert-success" role="alert">
+           <h4 class="alert-heading">Well done!</h4>
+        <p>You are successfully applied for job.</p>
+       </div>
+        }
       </Layout>
     )
   }
@@ -496,6 +481,24 @@ export default Careers;
 export const careerPage = graphql` {
   prismicCareers {
     data {
+      seo_title,
+      seo_description,
+      architect_button_name
+      admin_button_name
+      admin_key
+      architect_key
+      engineer_key
+      human_resources_key
+      management_key
+      sale_button_name
+      project_manager_key
+      sale_key
+      account_key
+      engineer_button_name
+      management_button_name
+      project_manager_button_name
+      human_resources_button_name
+      account_button_name
       title {
         text
       }

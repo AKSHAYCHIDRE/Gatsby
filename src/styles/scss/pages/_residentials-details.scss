@@ -18,6 +18,14 @@
     width: 30%;
   }
 }
+
+.detail-page {
+  .mt-80{
+    margin-top: 80px;
+  }
+}
+
+
 .tab-pane {
   ul {
     p {
@@ -580,10 +588,8 @@
 .detail-page {
   .download-btn {
     .btn-secondary{
+      &:hover,
       &:active{
-        color: #b2a585 !important;
-      }
-      &:hover{
         color: #b2a585 !important;
       }
     }

@@ -5,7 +5,7 @@ import '../styles/css/custom.css';
 import '../styles/scss/main.scss';
 import img1 from '../images/logo.png';
 import $ from 'jquery';
-const Header = ({ siteTitle ,pathname}) => {
+const Header = ({ siteTitle ,pathname,data}) => {
   const [contactFlag, setContactFlag] = useState(false);
   const contactFlagTrueFalse = () => setContactFlag(!contactFlag);
  
@@ -21,7 +21,7 @@ return(
   </Link>
   <div className="header-icons-wrapper">
   <div className="whats-app-icon">
-    <a href="https://wa.me/" target="_blank" className="d-flex align-items-center justify-content-center">
+    <a href={data.whatsapp.url} target="_blank" className="d-flex align-items-center justify-content-center">
     <span className="icon-icons8-whatsapp">
       <span className="path1"></span>
       <span className="path2"></span>
@@ -78,15 +78,16 @@ return(
                 <div className="contact-feild">
                   <i className="far fa-user-circle"></i>
                   <h4 className="text-center mb-3 section-title">  Direct call to our consultant</h4>
-                  <p>
-                    Project Inquiry :<Link to="tel:91204142330"  className="link-text"> 91204142330</Link>
-                  </p>
-                  <p>
-                    Head Office : <Link to="tel:912041442333" className="link-text"> 912041442333</Link>
-                  </p>
-                  <p>
-                    Fax Number : <Link to="tel:912041442333"  className="link-text"> 912026353333</Link>
-                  </p>
+                  {
+                    data.contact_info && data.contact_info.map((item) => {
+                      return (
+                        <p>
+                          {item.title1.text} : <a href={`tel:${item.number}`}  className="link-text"> {item.number}</a>
+                        </p>
+                      )
+                    })
+                  }
+                  
                 </div>
             </div>
             <div className="tab-pane fade" id="mail" role="tabpanel" aria-labelledby="mail-tab">

@@ -198,7 +198,7 @@ class HospitalityDetails extends React.Component {
     };
     return(
       <Layout location="/" noHeader="true"  pathname={this.props.location.pathname}>
-        <SEO title={hospitalityData.data.title.text} />
+        <SEO title={hospitalityData.seo_title} description={hospitalityData.seo_description}/>
         <main className="detail-page">
           {/* <!-- ---------------- banner start here ---------------- --> */}
           <Div100vh style={{ height: 'calc(100rvh - 60px)'}} className="banner-section">
@@ -234,22 +234,9 @@ class HospitalityDetails extends React.Component {
                   </nav>
                 </div>
               </div>
-              {/* ...................Customizable Button.................. */}
-              {
-                hospitalityData.data.customizable_button &&
-                 hospitalityData.data.customizable_button.length &&
-                  hospitalityData.data.customizable_button[0].link1 ?
-                  <div className="container detail-page-sections d-flex justify-content-center download-btn">
-                    {
-                      hospitalityData.data.customizable_button  && hospitalityData.data.customizable_button.map((item, index) => {
-                        return(
-                            item.link1.url ?
-                        <a key={index} href={item.link1.url}  target="_blank" className="btn-secondary text-center">{item.title1}</a>:null
-                        )
-                      })
-                    }
-                  </div> : null
-                }
+
+               
+
               <div className="padding-block-60">
                 <h2 className="page-heading text-uppercase">
                   {hospitalityData.data.heading.text}
@@ -264,7 +251,18 @@ class HospitalityDetails extends React.Component {
                   </a> */}
                 </div>
               </div>
+             
+              {/* ...................Customizable Button.................. */}
+             
+              {
+                hospitalityData.data.customizable_button_link && hospitalityData.data.customizable_button_title ?
+                <div className="detail-page-sections d-flex justify-content-start align-items-start download-btn mt-80 ">
+                  <a href={hospitalityData.data.customizable_button_link.url}  target="_blank" className="btn-secondary m-0 text-center">{hospitalityData.data.customizable_button_title}</a>
+                </div> : null
+              } 
+              
             </section>
+
           {/*  {/* <!------------------ middle section end here ------------------------> */}
           {/* <!-- ------------------- Showcase section start here ------------------- --> */}
             <section className="slider-page">
@@ -316,14 +314,18 @@ class HospitalityDetails extends React.Component {
             </section>
           {/* <!-- ------------------- Showcase section end here ------------------- --> */}
           {/* <!-- ------------------- Location section start here ------------------- --> */}
+          {
+            hospitalityData.data.location_url ? 
             <section className="location-sections">
               <h2 className="section-title text-uppercase text-center">
                 Location
               </h2>
               <div className="map-image">
-                <iframe className="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.9979896405875!2d73.87803231420851!3d18.52899298740413!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2c056fa4d8413%3A0xe2b3bd637ed792be!2sResidency%20Club!5e0!3m2!1sen!2sin!4v1576302776373!5m2!1sen!2sin" style={{ width:"100%", height:"372px", frameborder:"0", border:"0", allowFullScreen:"0"}}></iframe>
+                
+                  <iframe className="map" src={hospitalityData.data.location_url} style={{ width:"100%", height:"372px", frameborder:"0", border:"0", allowFullScreen:"0"}}></iframe>
               </div>
-            </section>
+            </section> : null
+           }
           {/* <!-- ------------------- Location section end here ------------------- --> */}
 
 
@@ -488,6 +490,7 @@ class HospitalityDetails extends React.Component {
                                     <div key={value}>
                                       <div role="link" tabIndex="0" className="slider-img " onClick={() => this.setState({ isOpenTwo: true ,photoIndex:value})}>
                                         <Img fluid={item.image1.localFile.childImageSharp.fluid} key={value} alt="Floor Plans" className="w-100 h-100" />
+                                        <p className="showcase-slide-caption">{item.caption}</p>
                                       </div>
                                     </div>
                                   )
@@ -513,6 +516,8 @@ class HospitalityDetails extends React.Component {
                                 photoIndex: (photoIndex + 1) % hospitalityData.data.floor_plans.length,
                               })
                             }
+                            imageCaption={hospitalityData.data.floor_plans[photoIndex].caption}
+
                           animationDuration={800}
 
                           />
@@ -609,6 +614,7 @@ class HospitalityDetails extends React.Component {
                                   <div key={value}>
                                     <div className="slider-img " onClick={() => this.setState({ isOpenTwo: true ,photoIndex:value})}>
                                       <Img fluid={item.image1.localFile.childImageSharp.fluid} key={value} alt="Floor Plans" className="w-100 h-100" />
+                                      <p className="showcase-slide-caption">{item.caption}</p>
                                     </div>
                                   </div>
                                 )
@@ -633,6 +639,8 @@ class HospitalityDetails extends React.Component {
                               photoIndex: (photoIndex + 1) % hospitalityData.data.floor_plans.length,
                             })
                           }
+                          imageCaption={hospitalityData.data.floor_plans[photoIndex].caption}
+
                         animationDuration={800}
   
                         />
@@ -771,6 +779,9 @@ export const hospitalityPage = graphql`
   query hospitalityData($uid: String!) {
   prismicOurVerticalsArticle(uid: { eq: $uid }) {
     data{
+      seo_title,
+      seo_description,
+      location_url
       title {
         text
       }
@@ -797,12 +808,11 @@ export const hospitalityPage = graphql`
       description {
         html
       }
-      customizable_button { 
-        title1
-        link1 {
-          url
-        }
+      customizable_button_title
+      customizable_button_link{
+        url
       }
+
       phase {
         title1 {
           text
@@ -840,6 +850,7 @@ export const hospitalityPage = graphql`
         caption
       }
       floor_plans {
+        caption
         title1 {
           text
         }

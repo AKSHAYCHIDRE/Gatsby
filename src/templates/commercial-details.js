@@ -221,7 +221,7 @@ class CommercialDetails extends React.Component {
     };
     return(
       <Layout location="/" noHeader="true"  pathname={this.props.location.pathname}>
-        <SEO title={commercialData.data.title.text} />
+        <SEO title={commercialData.seo_title} description={commercialData.seo_description}/>
         <main className="detail-page commercial-detail-page">
           {/* <!-- ---------------- banner start here ---------------- --> */}
           <Div100vh style={{ height: 'calc(100rvh - 60px)'}} className="banner-section" id="banner-section">
@@ -258,19 +258,7 @@ class CommercialDetails extends React.Component {
                   </nav>
                 </div>
               </div>
-              {/* ...................Customizable Button..................
-              {
-                 commercialData.data.customizable_button[0].link1.url && commercialData.data.customizable_button[0].link1.url ?
-                  <div className="container detail-page-sections d-flex justify-content-center download-btn">
-                    {
-                      commercialData.data.customizable_button && commercialData.data.customizable_button.map((item, index) => {
-                        return(
-                        <a key={index} href={item.link1.url}  target="_blank" className="btn-secondary text-center">{item.title1}</a>
-                        )
-                      })
-                    }
-                  </div> : null
-                } */}
+
               <div className=" padding-block-60">
                 <h2 className="page-heading text-uppercase">
                   {commercialData.data.heading.text}
@@ -285,6 +273,15 @@ class CommercialDetails extends React.Component {
                   </a> */}
                 </div>
               </div>
+
+              {/* ...................Customizable Button.................. */}
+              {
+                  commercialData.data.customizable_button_link && commercialData.data.customizable_button_title ?
+                  <div className="detail-page-sections d-flex justify-content-center align-items-start download-btn mt-80">
+                    <a href={commercialData.data.customizable_button_link.url}  target="_blank" className="btn-secondary m-0 text-center">{commercialData.data.customizable_button_title}</a>
+                  </div> : null
+                } 
+
             </section>
           {/*  {/* <!------------------ middle section end here ------------------------> */}
           {/* <!-- ------------------- Showcase section start here ------------------- --> */}
@@ -337,14 +334,19 @@ class CommercialDetails extends React.Component {
             </section>
           {/* <!-- ------------------- Showcase section end here ------------------- --> */}
           {/* <!-- ------------------- Location section start here ------------------- --> */}
+           {
+           commercialData.data.location_url ?
             <section className="location-sections">
               <h2 className="section-title text-uppercase text-center">
                 Location
               </h2>
               <div className="map-image">
-                <iframe className="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.9979896405875!2d73.87803231420851!3d18.52899298740413!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2c056fa4d8413%3A0xe2b3bd637ed792be!2sResidency%20Club!5e0!3m2!1sen!2sin!4v1576302776373!5m2!1sen!2sin" style={{ width:"100%", height:"372px", frameborder:"0", border:"0", allowFullScreen:"0"}}></iframe>
+                {
+                  <iframe className="map" src={commercialData.data.location_url} style={{ width:"100%", height:"372px", frameborder:"0", border:"0", allowFullScreen:"0"}}></iframe>
+                }
               </div>
-            </section>
+            </section> : null
+           }
           {/* <!-- ------------------- Location section end here ------------------- --> */}
             {/* <!--   ------------------- Proximities section start here ------------------- --> */}
             
@@ -503,6 +505,7 @@ class CommercialDetails extends React.Component {
                             //     photoIndex: (photoIndex + 1) % commercialData.data.floor_plans.length,
                             //   })
                             // }
+                            // imageCaption="{commercialData.data.floor_plans[photoIndex].caption}"
                           animationDuration={800}
 
                           />
@@ -511,10 +514,12 @@ class CommercialDetails extends React.Component {
                             <Slider {...floorPlan}>
                               {
                                 this.state.floorPlanSelect.length > 0 && this.state.floorPlanSelect.map((item,value) => {
+                                  console.log(item)
                                   return(
                                     <div key={value}>
                                       <div role="link" tabIndex="0" className="slider-img " onClick={() => this.setState({ isOpenTwo: true ,photoIndex:value})}>
                                         <Img fluid={item.image1.localFile.childImageSharp.fluid} key={value} alt="Floor Plans" className="w-100 h-100" />
+                                        <p className="showcase-slide-caption">{item.caption}</p>
                                       </div>
                                     </div>
                                   )
@@ -539,6 +544,7 @@ class CommercialDetails extends React.Component {
                                 photoIndex: (photoIndex + 1) % commercialData.data.floor_plans.length,
                               })
                             }
+                            imageCaption={commercialData.data.floor_plans[photoIndex].caption}
                           animationDuration={800}
 
                           />
@@ -602,6 +608,7 @@ class CommercialDetails extends React.Component {
                                 <div key={value}>
                                   <div role="link" tabIndex="0" className="slider-img" onClick={() => this.setState({ isOpenOneSlide: true ,photoIndex:value})}>
                                     <Img fluid={item.image1.localFile.childImageSharp.fluid} key={value} alt="Floor Plans" className="w-100 h-100" />
+                                    <p className="showcase-slide-caption">{item.caption}</p>
                                   </div>
                                 </div>
                               )
@@ -633,6 +640,7 @@ class CommercialDetails extends React.Component {
                                     <div key={value}>
                                       <div role="link" tabIndex="0" className="slider-img " onClick={() => this.setState({ isOpenTwo: true ,photoIndex:value})}>
                                         <Img fluid={item.image1.localFile.childImageSharp.fluid} key={value} alt="Floor Plans" className="w-100 h-100" />
+                                        <p className="showcase-slide-caption">{item.caption}</p>
                                       </div>
                                     </div>
                                   )
@@ -657,6 +665,7 @@ class CommercialDetails extends React.Component {
                                 photoIndex: (photoIndex + 1) % commercialData.data.floor_plans.length,
                               })
                             }
+                            imageCaption={commercialData.data.floor_plans[photoIndex].caption}
                           animationDuration={800}
 
                           />
@@ -861,7 +870,7 @@ class CommercialDetails extends React.Component {
             
             {/* <!--   ------------------- Maharera section start here ------------------- --> */}
             {
-              commercialData.data.phase ?
+              commercialData.data.phase && commercialData.data.maharera.url && commercialData.data.maharera_important.text ?
             <section className="container d-flex flex-column align-items-center detail-maharera-sections">
               <img src={commercialData.data.maharera.url} alt="maha-rera logo" style={{width:"70px"}}/>
               <p className="text-left text-sm-center mt-3">
@@ -884,7 +893,7 @@ class CommercialDetails extends React.Component {
                     <p  className={`maharera_important mt-3 mb-1` } style={this.state.styleData}>
                       {commercialData.data.maharera_important.text}
                     </p>
-                    <div className="d-none d-md-flex justify-content-center align-items-center w-100">
+                    <div className=" d-md-flex text-center justify-content-center align-items-center w-100">
                       {
                         this.state.styleData ?
                         <div className="maharera_showmore" onClick={() => {
@@ -913,6 +922,8 @@ export const hospitalityPage = graphql`
     prismicOurVerticalsArticle(uid: { eq: $uid }) {
     uid
     data {
+      seo_title,
+      seo_description,
       title {
         text
       }
@@ -942,12 +953,12 @@ export const hospitalityPage = graphql`
       description {
         html
       }
-      customizable_button { 
-        title1
-        link1 {
-          url
-        }
+      
+      customizable_button_title
+      customizable_button_link{
+        url
       }
+
       phase {
         title1 {
           text
@@ -978,6 +989,7 @@ export const hospitalityPage = graphql`
         caption
       }
       floor_plans {
+        caption
         title1 {
           text
         }

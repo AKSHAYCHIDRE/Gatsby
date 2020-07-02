@@ -8,7 +8,7 @@ class ManagementTeam extends React.Component {
     const mgntData = this.props.data.prismicManagementTeam.data;
     return(
       <Layout location="/" noHeader="true" pathname={this.props.location.pathname}>
-        <SEO title={mgntData.sub_title.text}/>
+        <SEO title={mgntData.seo_title} description={mgntData.seo_description}/>
           <section className="management-wrapper">
             <section className="page-heading-section container container-sm-fluid bg-color">
               <div className="padding-block-60">
@@ -20,7 +20,8 @@ class ManagementTeam extends React.Component {
                 </div>
               </div>
             </section>
-          <section className="container">
+
+          {/* <section className="container">
             <div className="col-12">
               <div className="gray-background d-flex align-items-center">
                 <div className="line"></div>
@@ -37,7 +38,7 @@ class ManagementTeam extends React.Component {
                       <div key={index} className="col-md-4 col-lg-3 col-sm-6">
                         <div className="member founder-image-wrapper">
                           <div className="founder-image">
-                            {/* <img src={item.image.url} alt="" title="Founder" width="100%"/> */}
+                            <img src={item.image.url} alt="" title="Founder" width="100%"/>
                           </div>
                           <div className="info-content">
                             <h4 className="heading">{item.name.text}</h4>
@@ -50,9 +51,39 @@ class ManagementTeam extends React.Component {
                 }
               </div>
             </div>
+          </section> */}
+
+          
+          <section className=" mt-140">
+            <div className="container">
+              <div className="title-heading text-center mb-60">
+                <h3 className="text-center section-title text-uppercase">{mgntData.founder_title.text}</h3>
+              </div>
+              <div className="row">
+              {
+                  mgntData.founder.map((item, index) => {
+                    return(
+                      <div key={index} className="col-12">
+                        <div className=" member founder-image-wrapper text-center">
+                          <div className="founder-image">
+                            {/* <img src={item.image.url} alt="" title="Founder" width="100%"/> */}
+                          </div>
+                          <div className="info-content">
+                            <h4 className="heading">{item.name.text}</h4>
+                            <span className="subheading">{item.designation.text}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })
+                }
+              </div>
+            </div> 
           </section>
+       
+
         {/* <!-- Director Start --> */}
-          <section className="director">
+          <section className="director mt-140">
             <div className="container">
               <div className="title-heading text-center mb-60">
                 <h3 className="text-center section-title text-uppercase">{mgntData.director_title.text}</h3>
@@ -79,6 +110,7 @@ class ManagementTeam extends React.Component {
             </div> 
           </section>
         {/* <!-- Director end--> */}
+
         {/* <!-- Stategy Start --> */}
           <section className="stategy-team mt-140">
             <div className="container">
@@ -144,6 +176,8 @@ export default ManagementTeam;
 export const managementPage = graphql`{
   prismicManagementTeam{
     data{
+      seo_title,
+      seo_description,
       sub_title{
         text
       }
